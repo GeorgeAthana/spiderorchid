@@ -22,9 +22,6 @@ You can add it to your environment using \code{\link[usethis]{edit_r_environ}()}
 This is end-point restricted to Monash IP addresses. So either use it on campus
 or invoke the VPN before using it off campus.
 }
-\details{
-Publications up to 2024 are available in the \code{\link{ebs_pure}} dataset.
-}
 \seealso{
 \code{\link{ebs_pure}}
 }
