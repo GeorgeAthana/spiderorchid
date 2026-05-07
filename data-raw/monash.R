@@ -5,35 +5,43 @@ library(pdftools)
 library(stringr)
 
 # Read pdf file
-pdf_file <- here::here("data-raw/Faculty-Quality-Journals-List_020823_approved.pdf")
+pdf_file <- here::here(
+  "data-raw/Faculty-Quality-Journals-List_020823_approved.pdf"
+)
 text <- pdf_text(pdf_file)
 # Extract all lines and extract journals named in each group
-data <- unlist(strsplit(text, "\n") ) |>
+data <- unlist(strsplit(text, "\n")) |>
   str_remove_all("") |>
   str_trim()
 # Remove all empty elements
 data <- data[data != ""]
 # Find where the group lists are
-gp_headings <- which(data %in% c("Group 1+","Group 1","Group 2")) + 1
+gp_headings <- which(data %in% c("Group 1+", "Group 1", "Group 2")) + 1
 
 # Group 1+
-Group1p <- data[gp_headings[1]:(gp_headings[2]-2)]
+Group1p <- data[gp_headings[1]:(gp_headings[2] - 2)]
 # Truncate AER line
-Group1p[grepl("American Economic Review", Group1p)] <- "American Economic Review"
+Group1p[grepl(
+  "American Economic Review",
+  Group1p
+)] <- "American Economic Review"
 
 # Group 1
-Group1 <- data[(gp_headings[2]+2):(gp_headings[3]-16)]
-Group1[grepl("Scandinavian Actuarial", Group1)] <- "Scandinavian Actuarial Journal"
+Group1 <- data[(gp_headings[2] + 2):(gp_headings[3] - 16)]
+Group1[grepl(
+  "Scandinavian Actuarial",
+  Group1
+)] <- "Scandinavian Actuarial Journal"
 
 # Group 2
-Group2 <- data[(gp_headings[3]+2):(NROW(data)-14)]
+Group2 <- data[(gp_headings[3] + 2):(NROW(data) - 14)]
 
 # Create faculty data frame
 faculty <- bind_rows(
-   tibble(title = Group1p, group="Group 1+"),
-   tibble(title = Group1, group="Group 1"),
-   tibble(title = Group2, group="Group 2")
-  )
+  tibble(title = Group1p, group = "Group 1+"),
+  tibble(title = Group1, group = "Group 1"),
+  tibble(title = Group2, group = "Group 2")
+)
 
 # Add in ABDC journals
 faculty <- faculty |>
@@ -41,8 +49,17 @@ faculty <- faculty |>
   mutate(
     rank = as.character(rank),
     group = if_else(is.na(group), rank, group),
-    group = recode(group, A = "Group 2", `A*` = "Group 1", B = "Group 3", C="Group 3"),
-    group = factor(group, levels=c("Group 1+","Group 1","Group 2","Group 3"))
+    group = recode(
+      group,
+      A = "Group 2",
+      `A*` = "Group 1",
+      B = "Group 3",
+      C = "Group 3"
+    ),
+    group = factor(
+      group,
+      levels = c("Group 1+", "Group 1", "Group 2", "Group 3")
+    )
   ) |>
   select(title, group)
 
@@ -51,28 +68,37 @@ faculty <- faculty |>
   filter(!(group == "Group 1" & str_detect(title, "Royal Statistical Society")))
 
 # Add in CORE journals that are not already included
-core_subset <- core_journals |>
-  bind_rows(core) |>
-  anti_join(faculty) |>
-  select(title, rank)
-faculty <- faculty |>
-  full_join(core_subset) |>
-  mutate(
-    rank = as.character(rank),
-    group = as.character(group),
-    group = if_else(is.na(group), rank, group),
-    group = recode(group, A = "Group 2", `A*` = "Group 1"),
-    group = factor(group, levels=c("Group 1+","Group 1","Group 2","Group 3"))
-  ) |>
-  select(title, group)
+#core_subset <- core_journals |>
+#  bind_rows(core) |>
+#  anti_join(faculty) |>
+#  select(title, rank)
+# faculty <- faculty |>
+#  full_join(core_subset) |>
+# mutate(
+#   rank = as.character(rank),
+#   group = as.character(group),
+#   group = if_else(is.na(group), rank, group),
+#   group = recode(group, A = "Group 2", `A*` = "Group 1"),
+#   group = factor(
+#     group,
+#     levels = c("Group 1+", "Group 1", "Group 2", "Group 3")
+#   )
+# ) |>
+# select(title, group)
 
-
-non_abdc <- here::here("data-raw/Non-ABDC-Quality-Journal-List-10Jul2025.xlsx") |>
+non_abdc <- here::here(
+  "data-raw/Non-ABDC-Quality-Journal-List-10Jul2025.xlsx"
+) |>
   readxl::read_excel(sheet = "Non-ABDC Journal Ranking") |>
   janitor::clean_names() |>
   rename(group = bus_eco_rating) |>
   filter(group != "Unranked") |>
-  mutate(group = factor(group, levels=c("Group 1+","Group 1","Group 2","Group 3"))) |>
+  mutate(
+    group = factor(
+      group,
+      levels = c("Group 1+", "Group 1", "Group 2", "Group 3")
+    )
+  ) |>
   select(title, group)
 # Add to the list
 faculty <- faculty |>
@@ -91,7 +117,10 @@ faculty <- faculty |>
     group = as.character(group),
     group = if_else(is.na(group), rank, group),
     group = recode(group, A = "Group 2", `A*` = "Group 1"),
-    group = factor(group, levels=c("Group 1+","Group 1","Group 2","Group 3"))
+    group = factor(
+      group,
+      levels = c("Group 1+", "Group 1", "Group 2", "Group 3")
+    )
   ) |>
   select(title, group)
 
@@ -103,7 +132,10 @@ monash <- faculty |>
   distinct()
 # Remove IME which appears twice
 monash <- monash |>
-  filter(!(rank == "Group 2" & str_detect(title, "Insurance: Mathematics and Economics")))
+  filter(
+    !(rank == "Group 2" &
+      str_detect(title, "Insurance: Mathematics and Economics"))
+  )
 # Remove Scandinavian Journal of Statistics which appears twice
 monash <- monash |>
   filter(title != "Scandinavian Journal of Statistics: theory and applications")
