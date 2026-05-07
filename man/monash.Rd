@@ -5,7 +5,7 @@
 \alias{monash}
 \title{Monash Business School Journal Quality List}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4617 rows and 2 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4489 rows and 2 columns.
 }
 \source{
 Monash Business School
@@ -14,7 +14,7 @@ Monash Business School
 data(monash)
 }
 \value{
-A data frame with 4617 observations on the following 2 variables:
+A data frame with 4489 observations on the following 2 variables:
 \describe{
 \item{\code{title}: }{Title of the journal}
 \item{\code{rank}: }{In order of best to lowest rank: Group 1+, Group 1, Group 2}

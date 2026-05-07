@@ -5,7 +5,7 @@
 \alias{scimago}
 \title{SCImago Journal Rank for all journals indexed by Scopus}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 31136 rows and 27 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 32193 rows and 29 columns.
 }
 \source{
 SCImago Journal & Country Rank. Retrieved from
@@ -15,7 +15,7 @@ SCImago Journal & Country Rank. Retrieved from
 data(scimago)
 }
 \value{
-A tibble with 31136 rows and 27 variables:
+A tibble with 32193 rows and 29 variables:
 \describe{
 \item{year}{Year of SCImago Journal Ranking calculation.}
 \item{rank}{Rank of the journal among all journals.}
