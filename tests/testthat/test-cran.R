@@ -3,7 +3,9 @@ test_that("fetch_cran returns a dataframe for valid authors", {
   cran_authors <- c("Lydeamore", "Hyndman")
   result <- fetch_cran(cran_authors)
   expect_s3_class(result, "tbl_df")
-  expect_true(all(c("package", "downloads", "authors", "date") %in% colnames(result)))
+  expect_true(all(
+    c("package", "downloads", "authors", "date") %in% colnames(result)
+  ))
   years <- format(as.Date(result$date), "%Y")
   expect_true(all(!is.na(years)))
   expect_gt(nrow(result), 0)

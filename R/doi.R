@@ -48,7 +48,7 @@ fetch_doi <- function(doi) {
           trimws(whitespace = "[\\h\\v]")
       }
       if (!is.null(a$published)) {
-        all_pubs[[id]]$year = as.integer(a$published$`date-parts`[1,1])
+        all_pubs[[id]]$year = as.integer(a$published$`date-parts`[1, 1])
       }
       if (!is.null(a$title)) {
         all_pubs[[id]]$title = a$title
@@ -60,7 +60,7 @@ fetch_doi <- function(doi) {
         all_pubs[[id]]$volume = a$volume
       }
       if (!is.null(a$issue)) {
-        all_pubs[[id]]$issue =  paste(unlist(a$issue), collapse="-")
+        all_pubs[[id]]$issue = paste(unlist(a$issue), collapse = "-")
       }
       if (!is.null(a$page)) {
         all_pubs[[id]]$page = a$page

@@ -16,7 +16,7 @@ core <- here("data-raw", "CORE.csv") |>
   select(conference = X2, rank = X5) |>
   transmute(
     title = str_trim_linebreak_etc(conference),
-    rank = factor(rank, levels=c("A*","A","B","C"), ordered=TRUE)
+    rank = factor(rank, levels = c("A*", "A", "B", "C"), ordered = TRUE)
   ) |>
   arrange(rank, title)
 
@@ -24,8 +24,10 @@ core <- here("data-raw", "CORE.csv") |>
 # file downloaded from http://portal.core.edu.au/jnl-ranks/?search=&by=all&source=CORE2020&sort=atitle&page=1
 core_journals <- here("data-raw", "CORE_journals.csv") |>
   read_csv() |>
-  rename(field_of_research=for1, issn = ISSN1) |>
-  mutate(rank = factor(rank, levels=c("A*","A","B","C"), ordered=TRUE)) |>
+  rename(field_of_research = for1, issn = ISSN1) |>
+  mutate(
+    rank = factor(rank, levels = c("A*", "A", "B", "C"), ordered = TRUE)
+  ) |>
   select(title, field_of_research, issn, rank) |>
   arrange(rank, title)
 

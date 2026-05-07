@@ -44,11 +44,13 @@ journal_ranking <- function(
     ),
     "scimago" = scimago |> dplyr::mutate(rank = sjr_best_quartile)
   )
-  purrr::map_dfr(title, \(x) match_journal_title(jrankings, x, fuzzy, only_best, ...))
+  purrr::map_dfr(title, \(x) {
+    match_journal_title(jrankings, x, fuzzy, only_best, ...)
+  })
 }
 
 match_journal_title <- function(jrankings, title, fuzzy, only_best, ...) {
-  if(is.na(title) || title == "") {
+  if (is.na(title) || title == "") {
     return(dplyr::tibble(title = character(0), rank = character()))
   }
   jrankings <- jrankings |>
@@ -64,9 +66,9 @@ match_journal_title <- function(jrankings, title, fuzzy, only_best, ...) {
   jrankings <- jrankings[idx, ]
   # Sort by distance
   dist <- c(utils::adist(title, jrankings$title, ignore.case = TRUE, ...))
-  jrankings <- jrankings[order(dist),]
+  jrankings <- jrankings[order(dist), ]
   if (only_best & nrow(jrankings) > 1) {
-    jrankings[1,]
+    jrankings[1, ]
   } else {
     jrankings
   }

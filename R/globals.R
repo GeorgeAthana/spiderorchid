@@ -19,4 +19,11 @@ utils::globalVariables(
   )
 )
 
-utils::globalVariables(c("monash","abdc","era2010","core","core_journals","scimago"))
+utils::globalVariables(c(
+  "monash",
+  "abdc",
+  "era2010",
+  "core",
+  "core_journals",
+  "scimago"
+))

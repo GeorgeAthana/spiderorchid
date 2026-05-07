@@ -17,7 +17,12 @@
 fetch_pure <- function(years) {
   # If we've already fetched this in the current session, just read it from file
   dest_folder <- tempdir()
-  dest_file <- paste0(dest_folder, "/pure", paste(range(years),collapse="_"), ".rds")
+  dest_file <- paste0(
+    dest_folder,
+    "/pure",
+    paste(range(years), collapse = "_"),
+    ".rds"
+  )
   if (file.exists(dest_file)) {
     return(readRDS(dest_file))
   }
@@ -29,10 +34,10 @@ fetch_pure <- function(years) {
 
   # Prepare JSON payload
   payload <- list(
-      faculty_list = list("Faculty of Business & Economics"),
-      department_list = list("Econometrics & Business Statistics"),
-      year_start = min(years),
-      year_end = max(years)
+    faculty_list = list("Faculty of Business & Economics"),
+    department_list = list("Econometrics & Business Statistics"),
+    year_start = min(years),
+    year_end = max(years)
   )
 
   # Make the API call
@@ -42,7 +47,7 @@ fetch_pure <- function(years) {
       "x-api-key" = Sys.getenv("PURE_API_KEY"),
       "Content-Type" = "application/json"
     ),
-    body =jsonlite::toJSON(payload, auto_unbox = TRUE),
+    body = jsonlite::toJSON(payload, auto_unbox = TRUE),
     encode = "raw"
   )
 
@@ -80,15 +85,21 @@ clean_pure_json <- function(json_data) {
     dplyr::mutate(
       pure_id = as.character(pure_id),
       doi = stringr::str_extract(bib, "doi.org/[0-9a-zA-Z._\\(\\)\\/\\-]*$") |>
-        stringr::str_remove("doi.org/") |> stringr::str_trim(),
-      authors = stringr::str_extract(bib, "^(.*?)(?=\\d)") |> stringr::str_trim()
+        stringr::str_remove("doi.org/") |>
+        stringr::str_trim(),
+      authors = stringr::str_extract(bib, "^(.*?)(?=\\d)") |>
+        stringr::str_trim()
     ) |>
     dplyr::select(pure_id, year, authors, title, journal, subtype, bib, doi)
 
   # Add known missing DOIs
   ebs |>
     dplyr::mutate(
-      doi = dplyr::if_else(pure_id == "617686492", "10.1016/j.jeconom.2022.08.006", doi)
+      doi = dplyr::if_else(
+        pure_id == "617686492",
+        "10.1016/j.jeconom.2022.08.006",
+        doi
+      )
     )
 }
 

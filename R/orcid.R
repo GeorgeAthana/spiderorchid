@@ -3,7 +3,7 @@
 #' @description
 #' Retrieves publications for given ORCID IDs, and returns them as a tibble.
 #' Only publications with DOIs are returned. The function uses the ORCID API to fetch
-#' the DOIs, and then uses the DOI API to fetch the publication details for each DOI. 
+#' the DOIs, and then uses the DOI API to fetch the publication details for each DOI.
 #'
 #' @details
 #' This function requires authentication on ORCID. If you have not previously
@@ -80,7 +80,7 @@ fetch_orcid <- function(orcid_ids) {
       }
     }
   }
-  output <- dplyr::bind_rows(all_pubs) 
+  output <- dplyr::bind_rows(all_pubs)
   col_order <- intersect(
     c(
       "orcid_id",
@@ -94,7 +94,7 @@ fetch_orcid <- function(orcid_ids) {
     ),
     colnames(output)
   )
-  if(NROW(output) == 0) {
+  if (NROW(output) == 0) {
     return(tibble::tibble(
       orcid_id = character(0),
       authors = character(0),
@@ -106,6 +106,6 @@ fetch_orcid <- function(orcid_ids) {
   } else {
     output |>
       dplyr::select(dplyr::all_of(col_order), dplyr::everything()) |>
-      dplyr::arrange(orcid_id, year, title, authors) 
+      dplyr::arrange(orcid_id, year, title, authors)
   }
 }
