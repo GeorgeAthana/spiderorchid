@@ -5,22 +5,25 @@ library(janitor)
 library(readxl)
 
 # Download data for all years for safe-keeping
-year <- seq(1999, as.numeric(format(Sys.Date(), "%Y"))-1)
-for(i in seq_along(year)) {
+year <- seq(1999, as.numeric(format(Sys.Date(), "%Y")) - 1)
+for (i in seq_along(year)) {
   url <- "https://www.scimagojr.com/journalrank.php?year=" |>
     paste0(year[i], "&out=xls")
   # Files are actually csv even though we ask for xls
   filename <- here::here("data-raw", paste0("scimagojr-", year[i], ".csv"))
   # Only download if the file does not already exist
-  if(!file.exists(filename)) {
-    download.file(url, filename, mode="w")
+  if (!file.exists(filename)) {
+    download.file(url, filename, mode = "w")
   }
 }
 # Check last year is not a replicate of previous year
 # This occurs when last year has not yet been added to Scimago
 scimago <- read_csv2(filename)
-df2 <- read_csv2(here::here("data-raw",paste0("scimagojr-", max(year)-1, ".csv")))
-if(identical(scimago, df2)) {
+df2 <- read_csv2(here::here(
+  "data-raw",
+  paste0("scimagojr-", max(year) - 1, ".csv")
+))
+if (identical(scimago, df2)) {
   # Remove duplicate file
   fs::file_delete(filename)
   year <- head(year, -1)
@@ -41,15 +44,15 @@ scimago <- scimago |>
   # Split up category information
   separate(
     categories,
-    into=paste0("Cat_",1:14),
+    into = paste0("Cat_", 1:14),
     sep = ";",
     remove = FALSE,
     fill = "right"
   ) |>
   mutate(
-    across(Cat_1:Cat_14, \(x) stringr::str_remove(x, pattern="\\(Q[0-4]\\)")),
+    across(Cat_1:Cat_14, \(x) stringr::str_remove(x, pattern = "\\(Q[0-4]\\)")),
     across(Cat_1:Cat_14, \(x) stringr::str_trim(x)),
-    across(Cat_1:Cat_14, \(x) na_if(x, y=""))
+    across(Cat_1:Cat_14, \(x) na_if(x, y = ""))
   )
 
 # Find unique categories
@@ -65,7 +68,7 @@ categories <- scimago |>
 find_cat_rank <- function(df, category) {
   df |>
     filter(
-        Cat_1 == category |
+      Cat_1 == category |
         Cat_2 == category |
         Cat_3 == category |
         Cat_4 == category |
@@ -89,7 +92,7 @@ find_cat_rank <- function(df, category) {
     select(sourceid, title, category, cat_rank, cat_percentile)
 }
 cat_ranks <- tibble()
-for(i in seq_along(categories)) {
+for (i in seq_along(categories)) {
   cat_ranks <- cat_ranks |>
     bind_rows(find_cat_rank(scimago, categories[i]))
 }
@@ -97,12 +100,12 @@ for(i in seq_along(categories)) {
 highest_cat_ranks <- cat_ranks |>
   group_by(sourceid) |>
   filter(cat_percentile == min(cat_percentile)) |>
-  slice_head(n=1) |>
+  slice_head(n = 1) |>
   ungroup()
 
 # Add category ranks to scimago
 scimago <- scimago |>
-  left_join(highest_cat_ranks, by=c("sourceid","title")) |>
+  left_join(highest_cat_ranks, by = c("sourceid", "title")) |>
   select(year, rank:categories, category, cat_rank, cat_percentile) |>
   rename(
     highest_category = category,
