@@ -10,3 +10,5 @@ data-raw/*
 ^pkgdown$
 ^\.github$
 ^shinyapp$
+^\.positai$
+^\.claude$
