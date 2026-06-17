@@ -7,6 +7,7 @@
 #'   \item{\cite{\link{era2010}}: }{ERA 2010}
 #'   \item{\cite{\link{core}}: }{CORE}
 #'   \item{\cite{\link{scimago}}: }{SCImago}
+#'   \item{\cite{\link{monashdeans}}: }{Monash Deans List}
 #'   }
 #' This function is used in the [Journal rankings shiny app](https://ebsmonash.shinyapps.io/Journal_Rankings/).
 #' @param title A character vector containing (partial) journal names.
@@ -27,7 +28,7 @@
 #' @export
 journal_ranking <- function(
   title,
-  source = c("monash", "abdc", "era2010", "core", "scimago"),
+  source = c("monash", "abdc", "era2010", "core", "scimago","monashdeans"),
   fuzzy = TRUE,
   only_best = length(title) > 1,
   ...
@@ -42,7 +43,8 @@ journal_ranking <- function(
       core,
       core_journals
     ),
-    "scimago" = scimago |> dplyr::mutate(rank = sjr_best_quartile)
+    "scimago" = scimago |> dplyr::mutate(rank = sjr_best_quartile),
+    "monashdeans" = monashdeans
   )
   purrr::map_dfr(title, \(x) {
     match_journal_title(jrankings, x, fuzzy, only_best, ...)
