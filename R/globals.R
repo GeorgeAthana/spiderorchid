@@ -25,5 +25,6 @@ utils::globalVariables(c(
   "era2010",
   "core",
   "core_journals",
-  "scimago"
+  "scimago",
+  "monashdeans"
 ))

@@ -6,7 +6,7 @@
 \usage{
 journal_ranking(
   title,
-  source = c("monash", "abdc", "era2010", "core", "scimago"),
+  source = c("monash", "abdc", "era2010", "core", "scimago", "monashdeans"),
   fuzzy = TRUE,
   only_best = length(title) > 1,
   ...
@@ -35,6 +35,7 @@ Given a list of journal titles, this function will return their ranking from var
 \item{\cite{\link{era2010}}: }{ERA 2010}
 \item{\cite{\link{core}}: }{CORE}
 \item{\cite{\link{scimago}}: }{SCImago}
+\item{\cite{\link{monashdeans}}: }{Monash Deans List}
 }
 This function is used in the \href{https://ebsmonash.shinyapps.io/Journal_Rankings/}{Journal rankings shiny app}.
 }
