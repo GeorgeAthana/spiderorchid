@@ -73,7 +73,7 @@ fetch_scholar <- function(scholar_id) {
   #This is a manual hack so that an error is not thrown and a message
   #highlighting the problem is printed.
   if(!(any('title'%in%colnames(output)))){
-    output<-add_column(output,title=NA,authors=NA,details=NA)
+    output<-tibble::add_column(output,title=NA,authors=NA,details=NA)
     print('Output is empty. Google Scholar may be limiting your access due to too many calls')
   }
 
